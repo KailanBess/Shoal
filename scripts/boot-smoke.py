@@ -41,13 +41,8 @@ def boot(name, extra, pattern, seconds):
                 print(json.dumps(result), flush=True)
                 return result
             if re.search(r'Reached target.*Emergency Mode|You are in emergency mode', plain, re.I):
-                # Gather evidence from the isolated guest before failing the same check.
-                time.sleep(3)
-                process.stdin.write(b'\n'); process.stdin.flush()
-                time.sleep(3)
-                commands = b'echo SHOAL_DIAG_BEGIN; uname -a; cat /proc/cmdline; systemctl --failed --no-pager; journalctl -b -u systemd-udevd -u systemd-nsresourced -u systemd-tmpfiles-setup-dev -u systemd-modules-load -n 100 --no-pager; ls -ld /dev /sys/module/virtio*; modprobe virtio_gpu; echo modprobe_rc:$?; echo SHOAL_DIAG_END\n'
-                process.stdin.write(commands); process.stdin.flush()
-                time.sleep(20)
+                # journald is forwarded by the test-only kernel command line.
+                time.sleep(5)
                 diagnostic = serial.read_text(errors='replace')
                 print(diagnostic[-24000:], flush=True)
                 raise RuntimeError(f'{name}: emergency mode; isolated guest diagnostics retained')
@@ -88,16 +83,26 @@ try:
     command(['xorriso', '-osirrox', 'on', '-indev', str(image), '-extract', '/boot/grub/grub.cfg', str(grub)])
     match = re.search(r'archisosearchuuid=([^\s]+)', grub.read_text())
     assert match and re.fullmatch(r'[a-zA-Z0-9-]+', match[1]), 'Missing/invalid ISO search UUID'
-    kernel = files / 'vmlinuz-linux-cachyos'
-    initrd = files / 'initramfs-linux-cachyos.img'
-    assert kernel.is_file() and initrd.is_file(), 'Expected kernel/initramfs missing'
-    append = f'archisobasedir=arch archisosearchuuid={match[1]} copytoram=no cow_spacesize=512M console=ttyS0,115200 systemd.unit=multi-user.target systemd.show_status=1'
-    linux = boot('live-linux-console', ['-kernel', str(kernel), '-initrd', str(initrd), '-append', append],
-                 r'Reached target.*Multi-User System|Started.*Serial Getty|login:\s*$', 600)
-    result = dict(passed=True, baselineBuild=info['shoalCommit'], iso=info['iso'], tests=[firmware, linux],
+    append = f'archisobasedir=arch archisosearchuuid={match[1]} copytoram=no cow_spacesize=512M console=ttyS0,115200 loglevel=6 systemd.unit=multi-user.target systemd.show_status=1 systemd.journald.forward_to_console=1'
+    tests = [firmware]
+    failures = []
+    for suffix, name in [('', 'live-linux-console'), ('-lts', 'live-linux-lts-console')]:
+        kernel = files / f'vmlinuz-linux-cachyos{suffix}'
+        initrd = files / f'initramfs-linux-cachyos{suffix}.img'
+        assert kernel.is_file() and initrd.is_file(), 'Expected kernel/initramfs missing'
+        try:
+            tests.append(boot(name, ['-kernel', str(kernel), '-initrd', str(initrd), '-append', append],
+                              r'Reached target.*Multi-User System', 600))
+        except RuntimeError as error:
+            failures.append(name)
+            tests.append(dict(test=name, passed=False, error=str(error)[-6000:]))
+            print(f'{name} failed; continuing to collect the other kernel result', flush=True)
+    result = dict(passed=not failures, baselineBuild=info['shoalCommit'], iso=info['iso'], tests=tests,
                   limits='UEFI-to-GRUB and separate serial Linux live boot only; no desktop, installer, controller, suspend or hardware qualification')
     (reports / 'RESULT.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2), flush=True)
+    if failures:
+        raise RuntimeError('Boot qualification failed: ' + ', '.join(failures))
 finally:
     # Do not upload large extracted kernels or per-test firmware variables.
     if (reports / 'boot-files').exists():
