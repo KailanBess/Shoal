@@ -14,14 +14,16 @@ Planning status: 2026-11-18. Checked items mean the stated decision/documentatio
 
 ## Owner setup / decisions
 
-- [ ] Confirm the recommended initial x86-64 build architecture.
+- [x] Use x86-64/desktop as the working first prototype target; no device or CPU minimum qualified.
 - [ ] Verify Actions availability and enable/approve if GitHub requests it.
 - [ ] Select extra runner capacity only if a measured build limitation requires it.
 - [ ] Arrange named physical test devices/testers later.
 
 ## Engineering — all pending
 
-- [ ] Pin and review upstream ISO-builder source and licenses.
+- [x] Pin upstream ISO-builder revision and review build entry points/configuration; [license and dynamic-input findings](FOUNDATION.md) remain release work.
+- [x] Add source-lock validation, regression tests and a read-only source-check workflow.
+- [ ] Resolve upstream license notices and dynamic build inputs before redistribution/reproducibility claims.
 - [ ] Validate a disposable Linux builder; record capacity and privileges.
 - [ ] Build an unchanged upstream baseline.
 - [ ] Record source/package/repository inputs and baseline hashes.
