@@ -4,7 +4,7 @@ Your games. One current.
 
 Shoal OS is a planned fish-themed Linux gaming distribution for PCs and handhelds, centered on emulation and the Aquarium app family.
 
-**Status: early design. No bootable image, installer or supported-device certification is available yet.** Hardware-neutral planning does not mean compatibility with every device or CPU architecture.
+**Status: an engineering CachyOS baseline ISO has been built; the complete Shoal interface and Linux app suite are not implemented yet.** See [the baseline download and verification report](docs/BASELINE-BUILD.md). No installed-system or physical-device certification is available. Hardware-neutral planning does not mean compatibility with every device or CPU architecture.
 
 ## Experience
 
@@ -30,7 +30,7 @@ The selected foundation is **CachyOS**, with Shoal-specific ISO profiles, packag
 
 ## Documentation
 
-Engineering has started: [source foundation and upstream review](docs/FOUNDATION.md). The source-validation workflow does not yet build an ISO.
+Engineering status: [source foundation and upstream review](docs/FOUNDATION.md), plus a separate [baseline ISO workflow and build report](docs/BASELINE-BUILD.md).
 
 Start with the [step-by-step build guide](docs/BUILD-GUIDE.md): it lists owner setup, Codex implementation work, prerequisites and acceptance evidence in order. Track progress in the [project checklist](docs/CHECKLIST.md). These documents do not indicate that an ISO or workflow has been built.
 

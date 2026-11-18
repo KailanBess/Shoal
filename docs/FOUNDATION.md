@@ -1,6 +1,6 @@
 # Source foundation and upstream review
 
-Status: first engineering increment. This adds source locking and validation; it does not build or boot an ISO.
+Status: source-locking engineering report. Its validation workflow does not build an ISO; a separate [baseline ISO build](BASELINE-BUILD.md) has since completed.
 
 ## Selected inputs
 
@@ -48,7 +48,7 @@ The **Source foundation** workflow validates the lock, runs regression checks, f
 
 That inventory does not qualify loop mounts, privileged containers, package downloads, a successful ISO build or VM boot. There is no ISO artifact or publish job in this workflow.
 
-The Windows development host has no installed WSL environment; this project does not install one. The next engineering increment is a disposable hosted Linux baseline builder, addressing the findings above and recording actual resource requirements and package inputs. Then build the upstream baseline before adding Shoal branding or app packages.
+The Windows development host has no installed WSL environment; this project does not install one. A disposable hosted Linux baseline builder has now completed; see [the build evidence](BASELINE-BUILD.md). Remaining work includes Shoal branding, app packages and installer/hardware acceptance. The license and reproducibility limitations above still apply.
 
 ## Upstream references
 
