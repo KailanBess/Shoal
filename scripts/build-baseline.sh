@@ -67,7 +67,23 @@ text = conf.read_text()
 old = 'Server = https://mirror.cachyos.org/repo/$arch/$repo'
 assert text.count(old) == 1
 conf.write_text(text.replace(old, 'Include = /etc/pacman.d/cachyos-mirrorlist'))
+profile = src/'archiso/profiledef.sh'
+text = profile.read_text()
+old = "airootfs_image_tool_options=('-comp' 'xz' '-Xbcj' 'x86' '-b' '1M' '-Xdict-size' '1M')"
+assert text.count(old) == 1
+profile.write_text(text.replace(old, "airootfs_image_tool_options=('-comp' 'zstd' '-Xcompression-level' '15' '-b' '1M')"))
+initrd = src/'archiso/airootfs/etc/mkinitcpio.conf.d/archiso.conf'
+text = initrd.read_text()
+assert text.count('COMPRESSION="xz"') == 1
+initrd.write_text(text.replace('COMPRESSION="xz"', 'COMPRESSION="zstd"'))
+manager = src/'archiso/airootfs/etc/systemd/system.conf.d/90-shoal-boot.conf'
+manager.parent.mkdir(parents=True, exist_ok=True)
+manager.write_text('[Manager]\nDefaultTimeoutStartSec=120s\nDefaultDeviceTimeoutSec=120s\n')
+drm = src/'archiso/airootfs/etc/systemd/system/drm-module-load.target.d/90-shoal-boot.conf'
+drm.parent.mkdir(parents=True, exist_ok=True)
+drm.write_text('[Unit]\nJobTimeoutSec=180s\n')
 PY
+git -c safe.directory="$src" -C "$src" add --intent-to-add archiso
 git -c safe.directory="$src" -C "$src" diff --binary > reports/upstream-build-adjustments.patch
 cp config/source-lock.json config/baseline-inputs.json reports/
 cp "$src/LICENSE" reports/UPSTREAM-LICENSE.txt
@@ -86,7 +102,25 @@ mapfile -t images < <(find "$src/out/desktop" -maxdepth 1 -type f -name '*.iso')
 image=/workspace/out/baseline/shoal-cachyos-baseline-x86_64.iso
 cp "${images[0]}" "$image"
 cd /workspace
-cp "$src"/out/desktop/*.pkgs.txt out/baseline/
+python - <<'PY'
+import pathlib
+root = pathlib.Path('/workspace')
+database = root/'.cache/cachyos-live-iso/build/x86_64/airootfs/var/lib/pacman/local'
+packages = {}
+for desc in database.glob('*/desc'):
+    text = desc.read_text()
+    fields = {}
+    for section in text.split('\n\n'):
+        lines = section.splitlines()
+        if len(lines) >= 2:
+            fields[lines[0]] = lines[1]
+    name, version = fields['%NAME%'], fields['%VERSION%']
+    assert name not in packages and name and version
+    packages[name] = version
+assert len(packages) >= 200 and {'base','systemd','linux-cachyos','linux-cachyos-lts','mesa'} <= packages.keys(), 'Incomplete package database'
+(root/'out/baseline/installed-packages.txt').write_text(''.join(f'{name} {packages[name]}\n' for name in sorted(packages)))
+print(f'Recorded {len(packages)} installed package versions from the built root database')
+PY
 cp reports/upstream-build-adjustments.patch out/baseline/
 git -c safe.directory="$src" -C "$src" archive --format=tar HEAD | gzip -n > out/baseline/upstream-source.tar.gz
 cp reports/UPSTREAM-LICENSE.txt out/baseline/
@@ -103,7 +137,11 @@ report = dict(status='built-not-boot-qualified', purpose='CachyOS baseline; Shoa
     inputs=json.loads((root/'config/baseline-inputs.json').read_text()), iso=dict(name=image.name, bytes=image.stat().st_size, sha256=digest),
     createdUtc=datetime.datetime.now(datetime.timezone.utc).isoformat(), signed=False, secureBootQualified=False,
     installedSystemTested=False, hardwareQualified=False, packageInputs='rolling repositories; versions recorded, not reproducible snapshot')
+package_list = image.parent/'installed-packages.txt'
+report['installedPackages'] = dict(count=len(package_list.read_text().splitlines()), sha256=hashlib.sha256(package_list.read_bytes()).hexdigest())
 (image.parent/'BUILD-INFO.json').write_text(json.dumps(report, indent=2)+'\n')
+for name in ['BUILD-INFO.json', 'SHA256SUMS', 'installed-packages.txt']:
+    (root/'reports'/name).write_bytes((image.parent/name).read_bytes())
 PY
 (cd out/baseline && sha256sum --check SHA256SUMS)
 echo 'Baseline ISO built and statically inspected; VM boot and installed-system acceptance remain separate.'

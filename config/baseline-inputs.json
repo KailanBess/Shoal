@@ -1,5 +1,11 @@
 {
   "schemaVersion": 1,
+  "baselineRevision": 2,
+  "liveRootCompression": "zstd-level-15",
+  "initramfsCompression": "zstd",
+  "defaultStartTimeoutSeconds": 120,
+  "defaultDeviceTimeoutSeconds": 120,
+  "drmJobTimeoutSeconds": 180,
   "builderImage": "archlinux@sha256:fa2d4ce3310ddd90a4208e5168be8ad367da5129af1245f38fd2d803bcbe3239",
   "platform": "linux/amd64",
   "mirrorlist": {
