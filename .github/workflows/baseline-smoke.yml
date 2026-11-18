@@ -42,11 +42,14 @@ jobs:
           set -euo pipefail
           (cd baseline && sha256sum --check SHA256SUMS)
           python3 - <<'PY'
-          import json, pathlib
+          import hashlib, json, pathlib
           actual=json.loads(pathlib.Path('baseline/BUILD-INFO.json').read_text())
           expected=json.loads(pathlib.Path('config/baseline-test-inputs.json').read_text())
           assert actual['shoalCommit']==expected['sourceCommit']
           assert actual['upstream']['commit']==expected['upstreamCommit']
+          packages=pathlib.Path('baseline/installed-packages.txt').read_bytes()
+          assert hashlib.sha256(packages).hexdigest()==actual['installedPackages']['sha256']
+          assert len(packages.splitlines())==actual['installedPackages']['count'] and actual['installedPackages']['count']>=200
           print(json.dumps(actual,indent=2))
           PY
       - name: Install disposable VM test tools
