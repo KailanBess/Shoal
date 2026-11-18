@@ -68,7 +68,7 @@ old = 'Server = https://mirror.cachyos.org/repo/$arch/$repo'
 assert text.count(old) == 1
 conf.write_text(text.replace(old, 'Include = /etc/pacman.d/cachyos-mirrorlist'))
 PY
-git -C "$src" diff --binary > reports/upstream-build-adjustments.patch
+git -c safe.directory="$src" -C "$src" diff --binary > reports/upstream-build-adjustments.patch
 cp config/source-lock.json config/baseline-inputs.json reports/
 cp "$src/LICENSE" reports/UPSTREAM-LICENSE.txt
 cp "$src/archiso/packages_desktop.x86_64" reports/requested-packages.txt
@@ -88,7 +88,7 @@ cp "${images[0]}" "$image"
 cd /workspace
 cp "$src"/out/desktop/*.pkgs.txt out/baseline/
 cp reports/upstream-build-adjustments.patch out/baseline/
-git -C "$src" archive --format=tar HEAD | gzip -n > out/baseline/upstream-source.tar.gz
+git -c safe.directory="$src" -C "$src" archive --format=tar HEAD | gzip -n > out/baseline/upstream-source.tar.gz
 cp reports/UPSTREAM-LICENSE.txt out/baseline/
 xorriso -indev "$image" -report_el_torito plain > reports/iso-boot-layout.txt 2>&1
 grep -q 'El Torito boot img' reports/iso-boot-layout.txt
