@@ -51,8 +51,8 @@ jobs:
           PY
       - name: Install disposable VM test tools
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends qemu-system-x86 ovmf xorriso
+          sudo env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a timeout 300 apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 -o DPkg::Lock::Timeout=60 update
+          sudo env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a timeout 300 apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 -o DPkg::Lock::Timeout=60 install --yes --no-install-recommends qemu-system-x86 ovmf xorriso
       - name: Run limited boot smoke checks
         run: python3 scripts/boot-smoke.py
       - name: Upload smoke evidence
