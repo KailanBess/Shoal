@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "status": "source-foundation",
+  "baselineBuilt": false,
+  "upstream": {
+    "repository": "https://github.com/CachyOS/CachyOS-Live-ISO.git",
+    "commit": "b0ebcae291b104765a60e330a5d25a26a69a2234",
+    "reviewedOn": "2026-11-18"
+  },
+  "target": {
+    "architecture": "x86_64",
+    "profile": "desktop",
+    "cpuMinimum": "not-qualified"
+  },
+  "reviewedFiles": {
+    "buildiso.sh": "80ccfab477610fa4784dcf7697cf223ed39f99b0b10366607ba2b23568abc554",
+    "util.sh": "14d6e95a732dd01d40d776d61975b922d35a451873fb83900c7f2f02f112999d",
+    "util-msg.sh": "ffb43a7bd641519a4da41bec68d8d0a72b4d45b710ff3c728c76b3e17e16aad8",
+    "util-iso.sh": "bf4d85bdd09c1890ac95bd2bfb3689c3ece511cef82d23510fec7d9c32479b3f",
+    "util-iso-mount.sh": "5783edd376e936bcf0308fd44e165bacc7e3e569a2453f010b11320154c7366a",
+    "archiso/profiledef.sh": "60744b539c51686d4c90cdac8e10b86cec8a5e721de806134e97441a0eff8b96",
+    "archiso/pacman.conf": "7361a375e80d4fead587362ce57152148f1839a099a9264c85335b5d4d7595e2",
+    "archiso/packages_desktop.x86_64": "8e356b6c060a8fb70381e37ddc89fec1f918b886cfad3198cb2f94b545d57510",
+    ".github/workflows/build.yml": "a4b18216e5e45bb6ad67d37ffedf4604a35cf560fe589f55147990bcf5108d00",
+    "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+  }
+}

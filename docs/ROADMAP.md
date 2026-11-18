@@ -1,6 +1,6 @@
 # Shoal development roadmap
 
-All milestones below are planned; this repository currently contains design documentation only. Follow the [step-by-step build guide](BUILD-GUIDE.md) for the full sequence and responsibilities, and the [project checklist](CHECKLIST.md) for evidence-based progress.
+All milestones below are planned; source locking and validation are now implemented, but ISO building and app integration remain pending. See [the source foundation](FOUNDATION.md). Follow the [step-by-step build guide](BUILD-GUIDE.md) for the full sequence and responsibilities, and the [project checklist](CHECKLIST.md) for evidence-based progress.
 
 ## 1. Build foundation
 

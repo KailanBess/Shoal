@@ -30,6 +30,8 @@ The selected foundation is **CachyOS**, with Shoal-specific ISO profiles, packag
 
 ## Documentation
 
+Engineering has started: [source foundation and upstream review](docs/FOUNDATION.md). The source-validation workflow does not yet build an ISO.
+
 Start with the [step-by-step build guide](docs/BUILD-GUIDE.md): it lists owner setup, Codex implementation work, prerequisites and acceptance evidence in order. Track progress in the [project checklist](docs/CHECKLIST.md). These documents do not indicate that an ISO or workflow has been built.
 
 - [System design and app integration](docs/DESIGN.md)

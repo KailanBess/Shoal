@@ -1,0 +1,8 @@
+.cache/
+build/
+out/
+reports/
+node_modules/
+*.iso
+*.img
+__pycache__/

@@ -1,0 +1,58 @@
+name: Source foundation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: foundation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out Shoal
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Validate source lock and regression checks
+        run: |
+          node scripts/validate-foundation.mjs
+          node --test tests/foundation.test.mjs
+      - name: Read locked upstream commit
+        id: lock
+        run: |
+          node --input-type=module -e 'import fs from "node:fs"; const lock=JSON.parse(fs.readFileSync("config/source-lock.json","utf8")); fs.appendFileSync(process.env.GITHUB_OUTPUT, `commit=${lock.upstream.commit}\n`);'
+      - name: Fetch pinned upstream without executing its scripts
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: CachyOS/CachyOS-Live-ISO
+          ref: ${{ steps.lock.outputs.commit }}
+          path: .cache/cachyos-live-iso
+          persist-credentials: false
+      - name: Verify reviewed source and shell syntax
+        run: |
+          node scripts/validate-foundation.mjs .cache/cachyos-live-iso
+          for file in buildiso.sh util.sh util-msg.sh util-iso.sh util-iso-mount.sh archiso/profiledef.sh; do
+            bash -n ".cache/cachyos-live-iso/$file"
+          done
+      - name: Record hosted builder capacity
+        run: |
+          {
+            echo '## Hosted Linux preflight'
+            echo 'This is capacity inventory, not an ISO build or privilege/boot qualification.'
+            echo '```text'
+            uname -sm
+            node --version
+            df -h .
+            free -h
+            command -v docker || true
+            command -v losetup || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

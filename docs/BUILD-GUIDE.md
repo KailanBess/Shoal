@@ -1,6 +1,6 @@
 # Shoal OS: step-by-step build and release guide
 
-Status: planning and implementation checklist, 2026-11-18. No Shoal ISO, installer, build workflow or qualified device is available yet. A checked planning item is not evidence of a working OS.
+Status: planning and implementation checklist, 2026-11-18. No Shoal ISO, installer, ISO-build workflow or qualified device is available yet. The [source foundation](FOUNDATION.md) now provides input validation and hosted capacity inventory only. A checked planning item is not evidence of a working OS.
 
 ## 1. Keep the project boundaries
 
@@ -19,7 +19,7 @@ Owner: Codex proposes and records; owner decides product preferences.
 
 1. Use CachyOS as the selected base.
 2. Keep the product design hardware-neutral between PCs and handhelds.
-3. Record **x86-64 as the recommended first build architecture, not yet confirmed**. ARM support is a separate engineering target, not implied by neutral styling.
+3. Record **x86-64/desktop as the working first prototype build target; not a qualified hardware specification**. ARM support is a separate engineering target, not implied by neutral styling.
 4. Before building, declare the artifact's actual architecture, minimum CPU instruction requirements and GPU/profile choices using the pinned upstream requirements. Do not assume an older CPU or every handheld works.
 5. First preview scope: bootable live ISO, KDE desktop fallback, FishBowl Linux integration, Shoal branding, basic setup and documented recovery. Verify installed-system behavior separately from the live session.
 6. Keep later Linux adaptations clearly marked planned until implemented and tested.
@@ -32,7 +32,7 @@ Owner: owner for account/repository settings; Codex for files and workflows.
 
 1. Open [Shoal Actions](https://github.com/KailanBess/Shoal/actions). Enable Actions if GitHub displays a disabled-actions notice.
 2. Under repository **Settings → Actions → General**, check that the actions used by the eventual workflow are permitted. Keep the default workflow token read-only; publishing jobs can request narrowly scoped write access in YAML.
-3. Allow a workflow run if GitHub explicitly requests approval. No workflow file exists yet, so there is currently no Build button to press.
+3. Allow a workflow run if GitHub explicitly requests approval. The Source foundation validation workflow is available after merge; it does not build an ISO. No ISO-build workflow exists yet.
 4. Check Actions storage, runner availability and any billing/spending limits before using paid capacity. Do not buy capacity until actual build measurements show it is needed.
 5. Prefer reviewed changes through pull requests once executable build configuration is introduced. Optional branch rules should require the real checks after those checks exist.
 6. Keep personal tokens, signing keys, passwords and runner registration tokens out of code, issues, chat and logs. A normal repository workflow can use its built-in GitHub token; a personal access token should not be the default requirement.
@@ -200,7 +200,7 @@ Owner: Codex for requested development; project owner for project operations and
 
 ## What the owner needs to do next
 
-1. Confirm the recommended first **x86-64 preview target**, or name a different architecture. No specific PC or handheld model is required for planning.
+1. The working first target is **x86-64/desktop**. Request another architecture if needed; additional targets require separate build and test work. No specific PC or handheld model is required for planning.
 2. Check that Shoal Actions is available; enable/approve only if GitHub requests it.
 3. Let Codex prepare and validate the upstream baseline and build workflow. A VM, personal token, paid runner, domain or signing certificate is not automatically required from the owner now.
 4. If measured runner limitations block the build, choose an offered builder option then. Do not register a persistent privileged runner preemptively.
