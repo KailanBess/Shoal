@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out Shoal
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
       - name: Validate source lock and regression checks
@@ -30,7 +30,7 @@ jobs:
         run: |
           node --input-type=module -e 'import fs from "node:fs"; const lock=JSON.parse(fs.readFileSync("config/source-lock.json","utf8")); fs.appendFileSync(process.env.GITHUB_OUTPUT, `commit=${lock.upstream.commit}\n`);'
       - name: Fetch pinned upstream without executing its scripts
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           repository: CachyOS/CachyOS-Live-ISO
           ref: ${{ steps.lock.outputs.commit }}
@@ -55,4 +55,4 @@ jobs:
             command -v docker || true
             command -v losetup || true
             echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
