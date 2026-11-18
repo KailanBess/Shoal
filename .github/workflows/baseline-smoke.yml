@@ -60,6 +60,9 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: baseline-boot-smoke-${{ github.run_attempt }}
-          path: reports/boot-smoke/
+          path: |
+            reports/boot-smoke/*.log
+            reports/boot-smoke/*.json
+            reports/boot-smoke/*.cfg
           if-no-files-found: warn
           retention-days: 14

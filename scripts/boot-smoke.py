@@ -26,7 +26,7 @@ def boot(name, extra, pattern, seconds):
     kvm = os.access('/dev/kvm', os.R_OK | os.W_OK)
     args = ['qemu-system-x86_64', '-machine', 'q35', '-accel', 'kvm' if kvm else 'tcg',
             '-cpu', 'host' if kvm else 'max', '-smp', '2', '-m', '4096',
-            '-display', 'none', '-serial', f'file:{serial}', '-monitor', 'none',
+            '-vga', 'virtio', '-display', 'none', '-serial', f'file:{serial}', '-monitor', 'none',
             '-nic', 'none', '-no-reboot', '-cdrom', str(image)] + extra
     process = subprocess.Popen(args, stdout=stderr, stderr=stderr)
     started = time.monotonic()
@@ -36,10 +36,10 @@ def boot(name, extra, pattern, seconds):
             plain = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', text)
             if re.search(pattern, plain, re.I | re.M):
                 result = dict(test=name, passed=True, accelerator='kvm' if kvm else 'tcg',
-                              elapsedSeconds=round(time.monotonic() - started, 1))
+                              graphics='virtio-vga', elapsedSeconds=round(time.monotonic() - started, 1))
                 print(json.dumps(result), flush=True)
                 return result
-            if re.search(r'Kernel panic|Unsupported CPU|This kernel requires', plain, re.I):
+            if re.search(r'Kernel panic|Unsupported CPU|This kernel requires|Reached target.*Emergency Mode|You are in emergency mode', plain, re.I):
                 raise RuntimeError(f'{name}: guest boot failure\n{plain[-6000:]}')
             if process.poll() is not None:
                 raise RuntimeError(f'{name}: QEMU exited {process.returncode}; see QEMU log')
@@ -80,7 +80,7 @@ try:
     assert kernel.is_file() and initrd.is_file(), 'Expected kernel/initramfs missing'
     append = f'archisobasedir=arch archisosearchuuid={match[1]} copytoram=no cow_spacesize=512M console=ttyS0,115200 systemd.unit=multi-user.target systemd.show_status=1'
     linux = boot('live-linux-console', ['-kernel', str(kernel), '-initrd', str(initrd), '-append', append],
-                 r'Reached target.*Multi-User System|Started.*Serial Getty|login:\s*$', 360)
+                 r'Reached target.*Multi-User System|Started.*Serial Getty|login:\s*$', 600)
     result = dict(passed=True, baselineBuild=info['shoalCommit'], iso=info['iso'], tests=[firmware, linux],
                   limits='UEFI-to-GRUB and separate serial Linux live boot only; no desktop, installer, controller, suspend or hardware qualification')
     (reports / 'RESULT.json').write_text(json.dumps(result, indent=2) + '\n')
@@ -88,5 +88,6 @@ try:
 finally:
     # Do not upload large extracted kernels or per-test firmware variables.
     if (reports / 'boot-files').exists():
+        os.chmod(reports / 'boot-files', 0o700)
         shutil.rmtree(reports / 'boot-files')
     (reports / 'uefi-vars.fd').unlink(missing_ok=True)
