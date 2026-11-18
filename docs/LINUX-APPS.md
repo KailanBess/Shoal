@@ -4,6 +4,15 @@ Confirmed product requirement: Shoal includes Linux editions of Aquarium, FishBo
 
 Status: integration requirements only. FishBowl already has upstream Linux source; Shoal packaging/integration is pending. The other editions are not implemented in this repository yet.
 
+## Naming and visual direction
+
+- Existing apps keep their current names and established shell/UI designs: Aquarium, FishBowl, FishNet, FishTank, File Organizer, Device Inventory and Workspace Launcher. Their immediate requirement is a Linux port, not a rename or visual redesign.
+- Preserve existing navigation, useful features, appearance options and recognizable layout when porting. Replace Windows-specific APIs and controls with Linux-capable implementations while retaining the established design and behavior wherever practical.
+- Newly created Shoal apps and system interfaces use fish, ocean or body-of-water themed names and visual identities. Proposed names must be checked before public branding; no availability is implied.
+- New shells, setup pages and dialogs should follow the aquatic direction through a coherent palette, iconography and restrained imagery. Keep labels readable and descriptive, with visible focus, adequate contrast and reduced-motion support.
+- Shared integration must respect existing app customization. Do not silently overwrite established themes or force an app redesign to match new OS artwork.
+- Linux platform limitations and necessary adaptations remain documented in each feature ledger; visual similarity alone is not feature completion.
+
 ## Ownership and delivery
 
 - All Shoal integration, Linux adaptations and packaging remain in this repository. Do not modify existing app repositories or Windows releases.
@@ -41,7 +50,7 @@ The aim is to retain useful existing behavior. Do not silently remove features o
 
 ## Shared integration work
 
-1. Define common navigation, colors, spacing, icons, accessibility and scaling rules.
+1. Document the existing apps' names, shells, navigation and appearance as the porting baseline. Define aquatic naming and visual rules for new apps/system surfaces without redesigning the existing apps.
 2. Review a Linux-capable UI framework and platform-service boundary before committing to the ports. A specific framework has not been selected.
 3. Reuse portable models/validation only after checking Windows dependencies and compiler/runtime compatibility.
 4. Design per-user data paths, profile leases, bounded reads, atomic saves, unknown-field preservation and corrupt-file recovery.

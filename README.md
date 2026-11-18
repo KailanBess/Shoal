@@ -18,6 +18,8 @@ Shoal OS is a planned fish-themed Linux gaming distribution for PCs and handheld
 
 The complete Shoal system will include Linux editions of **Aquarium, FishBowl, FishNet, FishTank, File Organizer, Device Inventory and Workspace Launcher**. These are built-in OS applications, with Linux packaging and adaptations maintained here. FishBowl-first prototypes are intermediate milestones, not the complete suite. See [Linux editions and acceptance requirements](docs/LINUX-APPS.md). These editions are not all implemented yet.
 
+Existing apps retain their names and established shell/UI designs; the work is to port them to Linux. New apps and system interfaces use fish, ocean or body-of-water themed names and visuals. See the [naming and visual direction](docs/LINUX-APPS.md#naming-and-visual-direction).
+
 ## Project boundaries
 
 Shoal is a separate project. Existing Aquarium, FishBowl, FishNet and FishTank repositories and release workflows remain unchanged. Reference their public releases or pinned source as external dependencies; keep Shoal-specific integration and adaptations here.
