@@ -77,4 +77,4 @@ Do not install, repartition, change boot settings or modify the user's installed
 
 ## Next decision
 
-PC and handheld scope is confirmed, with hardware-neutral planning. Establish the project in a new repository, keeping all current repositories unchanged. Choose concrete build targets and test devices later, before claiming bootable-image or physical-device compatibility. Qualify a FishBowl-first prototype before adapting the remaining apps. Shoal OS is the selected project name. Trademark and domain availability have not been checked.
+PC and handheld scope is confirmed, with hardware-neutral planning. Continue implementation in the established Shoal repository, keeping all current app repositories unchanged. Follow [the build guide](BUILD-GUIDE.md) for prerequisites and acceptance steps. Choose concrete build targets and test devices later, before claiming bootable-image or physical-device compatibility. Qualify a FishBowl-first prototype before adapting the remaining apps. Shoal OS is the selected project name. Trademark and domain availability have not been checked.

@@ -1,6 +1,6 @@
 # Shoal development roadmap
 
-All milestones below are planned; this repository currently contains design documentation only.
+All milestones below are planned; this repository currently contains design documentation only. Follow the [step-by-step build guide](BUILD-GUIDE.md) for the full sequence and responsibilities, and the [project checklist](CHECKLIST.md) for evidence-based progress.
 
 ## 1. Build foundation
 
