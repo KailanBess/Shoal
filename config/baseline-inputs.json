@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "builderImage": "archlinux@sha256:fa2d4ce3310ddd90a4208e5168be8ad367da5129af1245f38fd2d803bcbe3239",
+  "platform": "linux/amd64",
+  "mirrorlist": {
+    "repository": "CachyOS/CachyOS-PKGBUILDS",
+    "commit": "4d03c35d9de19126fe502085f04d862f4ccd75c9",
+    "url": "https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/4d03c35d9de19126fe502085f04d862f4ccd75c9/cachyos-mirrorlist/cachyos-mirrorlist",
+    "sha256": "d7d8a6511f7ca92e48df0078879758780367e21ef49911ecbde8b4facd04c1cd"
+  },
+  "repositoryPolicy": "rolling signed repositories; actual versions recorded; not a reproducible snapshot"
+}
