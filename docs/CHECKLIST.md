@@ -19,14 +19,14 @@ Planning status: 2026-11-18. Checked items mean the stated decision/documentatio
 - [ ] Select extra runner capacity only if a measured build limitation requires it.
 - [ ] Arrange named physical test devices/testers later.
 
-## Engineering — all pending
+## Engineering — incremental progress
 
 - [x] Pin upstream ISO-builder revision and review build entry points/configuration; [license and dynamic-input findings](FOUNDATION.md) remain release work.
 - [x] Add source-lock validation, regression tests and a read-only source-check workflow.
 - [ ] Resolve upstream license notices and dynamic build inputs before redistribution/reproducibility claims.
 - [ ] Validate a disposable Linux builder; record capacity and privileges.
-- [ ] Build an unchanged upstream baseline.
-- [ ] Record source/package/repository inputs and baseline hashes.
+- [x] Build a CachyOS desktop baseline with recorded mirror-list adjustments; see [build evidence](BASELINE-BUILD.md).
+- [x] Record baseline source/package/repository inputs, artifact identity and checksum verification; rolling packages are not a reproducible snapshot.
 - [ ] Implement Shoal ISO profiles, packaging, build wrapper and branding.
 - [ ] Verify live-session and installed-system content separately.
 - [ ] Integrate a fixed FishBowl Linux revision with license/source obligations.
@@ -43,8 +43,8 @@ Planning status: 2026-11-18. Checked items mean the stated decision/documentatio
 - [ ] Implement/package Device Inventory Linux.
 - [ ] Implement/package Workspace Launcher Linux.
 - [ ] Verify all seven built-in Linux editions in the installed OS; list absent apps in intermediate previews.
-- [ ] Add read-only PR checks and a manual preview ISO workflow.
-- [ ] Complete a real build run and verify downloaded artifact checksums.
+- [x] Add read-only source checks and a manual baseline ISO workflow. A complete Shoal preview is still pending.
+- [x] Complete a real baseline build and independently verify the downloaded artifact's ISO checksum/identity.
 
 ## Preview acceptance — all pending
 
@@ -68,4 +68,4 @@ Planning status: 2026-11-18. Checked items mean the stated decision/documentatio
 - Supplying personal access tokens or signing keys in chat.
 - Choosing a specific device merely to continue hardware-neutral design.
 
-There is no ISO workflow or bootable Shoal release yet. Update this checklist using actual evidence as engineering work completes.
+A baseline ISO workflow and artifact now exist; there is no completed Shoal OS release yet. Update this checklist using actual evidence as engineering work completes.

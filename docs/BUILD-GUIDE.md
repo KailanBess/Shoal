@@ -1,6 +1,6 @@
 # Shoal OS: step-by-step build and release guide
 
-Status: planning and implementation checklist, 2026-11-18. No Shoal ISO, installer, ISO-build workflow or qualified device is available yet. The [source foundation](FOUNDATION.md) now provides input validation and hosted capacity inventory only. A checked planning item is not evidence of a working OS.
+Status: planning and implementation checklist, 2026-11-18. A [CachyOS baseline ISO](BASELINE-BUILD.md) has now been built through the separate baseline workflow. The completed Shoal interface/app suite, installer acceptance and physical-device qualification are still pending. A checked planning item is not evidence of a working OS.
 
 ## 1. Keep the project boundaries
 
@@ -32,7 +32,7 @@ Owner: owner for account/repository settings; Codex for files and workflows.
 
 1. Open [Shoal Actions](https://github.com/KailanBess/Shoal/actions). Enable Actions if GitHub displays a disabled-actions notice.
 2. Under repository **Settings → Actions → General**, check that the actions used by the eventual workflow are permitted. Keep the default workflow token read-only; publishing jobs can request narrowly scoped write access in YAML.
-3. Allow a workflow run if GitHub explicitly requests approval. The Source foundation validation workflow is available after merge; it does not build an ISO. No ISO-build workflow exists yet.
+3. Allow a workflow run if GitHub explicitly requests approval. Source foundation performs input validation only. CachyOS baseline ISO provides a separate deliberate build; see [the build report](BASELINE-BUILD.md) for artifacts and how to rerun it.
 4. Check Actions storage, runner availability and any billing/spending limits before using paid capacity. Do not buy capacity until actual build measurements show it is needed.
 5. Prefer reviewed changes through pull requests once executable build configuration is introduced. Optional branch rules should require the real checks after those checks exist.
 6. Keep personal tokens, signing keys, passwords and runner registration tokens out of code, issues, chat and logs. A normal repository workflow can use its built-in GitHub token; a personal access token should not be the default requirement.

@@ -9,7 +9,7 @@ export function validateLock(lock) {
   if (lock.upstream?.repository !== 'https://github.com/CachyOS/CachyOS-Live-ISO.git') throw new Error('Unexpected upstream repository');
   if (!/^[a-f0-9]{40}$/.test(lock.upstream.commit ?? '')) throw new Error('Upstream must be a full commit SHA');
   if (lock.target?.architecture !== 'x86_64' || lock.target.profile !== 'desktop') throw new Error('Unsupported initial target');
-  if (lock.target.cpuMinimum !== 'not-qualified' || lock.baselineBuilt !== false) throw new Error('This foundation does not qualify a build');
+  if (lock.target.cpuMinimum !== 'not-qualified' || Object.hasOwn(lock, 'baselineBuilt')) throw new Error('Input locks do not qualify a build; use workflow evidence');
   const required = ['buildiso.sh', 'util.sh', 'util-msg.sh', 'util-iso.sh', 'util-iso-mount.sh', 'archiso/profiledef.sh', 'archiso/pacman.conf', 'archiso/packages_desktop.x86_64', '.github/workflows/build.yml', 'LICENSE'];
   if (!lock.reviewedFiles || Object.keys(lock.reviewedFiles).length !== required.length) throw new Error('Reviewed file set is incomplete');
   for (const path of required) {
@@ -48,7 +48,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       if (sha !== lock.upstream.commit) throw new Error('Upstream HEAD does not match lock');
       console.log(`Verified ${verifyReviewedFiles(lock, root)} reviewed upstream files at ${sha}`);
     } else {
-      console.log(`Valid source lock: ${lock.upstream.commit}; target x86_64/desktop; ISO build not yet qualified`);
+      console.log(`Valid source lock: ${lock.upstream.commit}; target x86_64/desktop; build/boot evidence is recorded separately`);
     }
   } catch (error) {
     console.error(error.message);

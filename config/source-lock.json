@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "status": "source-foundation",
-  "baselineBuilt": false,
   "upstream": {
     "repository": "https://github.com/CachyOS/CachyOS-Live-ISO.git",
     "commit": "b0ebcae291b104765a60e330a5d25a26a69a2234",

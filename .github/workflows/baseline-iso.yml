@@ -1,0 +1,74 @@
+name: CachyOS baseline ISO
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [build/baseline-iso]
+    paths:
+      - '.github/workflows/baseline-iso.yml'
+      - 'scripts/build-baseline.sh'
+      - 'config/baseline-inputs.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: baseline-iso-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'KailanBess/Shoal'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out Shoal
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Validate source lock and scripts
+        id: config
+        run: |
+          node scripts/validate-foundation.mjs
+          node --test tests/foundation.test.mjs
+          bash -n scripts/build-baseline.sh
+          node --input-type=module -e 'import fs from "node:fs"; const lock=JSON.parse(fs.readFileSync("config/source-lock.json","utf8")); const inputs=JSON.parse(fs.readFileSync("config/baseline-inputs.json","utf8")); if(!/^archlinux@sha256:[a-f0-9]{64}$/.test(inputs.builderImage)) throw Error("Unpinned build image"); fs.appendFileSync(process.env.GITHUB_OUTPUT, `upstream=${lock.upstream.commit}\nimage=${inputs.builderImage}\n`);'
+      - name: Fetch pinned CachyOS source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: CachyOS/CachyOS-Live-ISO
+          ref: ${{ steps.config.outputs.upstream }}
+          path: .cache/cachyos-live-iso
+          persist-credentials: false
+      - name: Verify reviewed upstream bytes
+        run: node scripts/validate-foundation.mjs .cache/cachyos-live-iso
+      - name: Build baseline in disposable Arch container
+        env:
+          BUILDER_IMAGE: ${{ steps.config.outputs.image }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports out/baseline
+          df -h . | tee reports/host-capacity.txt
+          free -h | tee -a reports/host-capacity.txt
+          docker pull --platform linux/amd64 "$BUILDER_IMAGE"
+          docker image inspect "$BUILDER_IMAGE" > reports/builder-image.json
+          docker run --rm --privileged --platform linux/amd64 \
+            -e SHOAL_DISPOSABLE_BUILDER=1 -e "SHOAL_SOURCE_COMMIT=$GITHUB_SHA" \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace" \
+            --workdir /workspace "$BUILDER_IMAGE" bash scripts/build-baseline.sh
+      - name: Upload baseline ISO and manifests
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: shoal-cachyos-baseline-x86_64
+          path: out/baseline/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: baseline-diagnostics-${{ github.run_attempt }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14
