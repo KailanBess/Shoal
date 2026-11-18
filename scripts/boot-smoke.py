@@ -23,12 +23,13 @@ def command(args):
 def boot(name, extra, pattern, seconds):
     serial = reports / f'{name}-serial.log'
     stderr = (reports / f'{name}-qemu.log').open('w')
+    serial_output = serial.open('wb')
     kvm = os.access('/dev/kvm', os.R_OK | os.W_OK)
     args = ['qemu-system-x86_64', '-machine', 'q35', '-accel', 'kvm' if kvm else 'tcg',
             '-cpu', 'host' if kvm else 'max', '-smp', '2', '-m', '4096',
-            '-vga', 'virtio', '-display', 'none', '-serial', f'file:{serial}', '-monitor', 'none',
+            '-vga', 'virtio', '-display', 'none', '-serial', 'stdio', '-monitor', 'none',
             '-nic', 'none', '-no-reboot', '-cdrom', str(image)] + extra
-    process = subprocess.Popen(args, stdout=stderr, stderr=stderr)
+    process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=serial_output, stderr=stderr)
     started = time.monotonic()
     try:
         while time.monotonic() - started < seconds:
@@ -39,7 +40,18 @@ def boot(name, extra, pattern, seconds):
                               graphics='virtio-vga', elapsedSeconds=round(time.monotonic() - started, 1))
                 print(json.dumps(result), flush=True)
                 return result
-            if re.search(r'Kernel panic|Unsupported CPU|This kernel requires|Reached target.*Emergency Mode|You are in emergency mode', plain, re.I):
+            if re.search(r'Reached target.*Emergency Mode|You are in emergency mode', plain, re.I):
+                # Gather evidence from the isolated guest before failing the same check.
+                time.sleep(3)
+                process.stdin.write(b'\n'); process.stdin.flush()
+                time.sleep(3)
+                commands = b'echo SHOAL_DIAG_BEGIN; uname -a; cat /proc/cmdline; systemctl --failed --no-pager; journalctl -b -u systemd-udevd -u systemd-nsresourced -u systemd-tmpfiles-setup-dev -u systemd-modules-load -n 100 --no-pager; ls -ld /dev /sys/module/virtio*; modprobe virtio_gpu; echo modprobe_rc:$?; echo SHOAL_DIAG_END\n'
+                process.stdin.write(commands); process.stdin.flush()
+                time.sleep(20)
+                diagnostic = serial.read_text(errors='replace')
+                print(diagnostic[-24000:], flush=True)
+                raise RuntimeError(f'{name}: emergency mode; isolated guest diagnostics retained')
+            if re.search(r'Kernel panic|Unsupported CPU|This kernel requires', plain, re.I):
                 raise RuntimeError(f'{name}: guest boot failure\n{plain[-6000:]}')
             if process.poll() is not None:
                 raise RuntimeError(f'{name}: QEMU exited {process.returncode}; see QEMU log')
@@ -54,6 +66,7 @@ def boot(name, extra, pattern, seconds):
                 process.kill()
                 process.wait(timeout=10)
         stderr.close()
+        serial_output.close()
 
 
 try:
