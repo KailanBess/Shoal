@@ -12,7 +12,9 @@ A controller-friendly Linux gaming distribution centered on emulation and the Aq
 
 ## Foundation
 
-Proposed base: a custom Bazzite-derived image built using the upstream image template. Select the specific base, GPU variant and immutable digest only after choosing the first hardware target. Keep upstream driver and security maintenance rather than maintaining a new kernel or driver stack.
+Selected base: CachyOS. Keep Shoal ISO profiles, packages, branding and adaptations in this repository, using the upstream CachyOS-Live-ISO build system as a reference. Pin reviewed upstream revisions and record package/repository inputs and ISO checksums. Rolling repositories alone do not provide reproducible builds; retain controlled inputs before making that claim.
+
+Planning remains neutral between PC and handheld models. Each artifact must declare its architecture, CPU instruction requirements and graphics/device support. Follow upstream requirements; do not infer ARM support or optimized repository compatibility. Retain upstream kernel and driver maintenance.
 
 Use KDE Plasma for the desktop initially. Prototype FishBowl autostart in a normal desktop session first; qualify a dedicated Gamescope session separately. Existing Steam Gaming Mode is Steam-centered and must not be presented as a ready-made FishBowl session.
 
@@ -35,24 +37,26 @@ Support two device profiles built from a shared product configuration:
 - PC/living-room: keyboard/mouse and controller navigation, multiple displays, TV scaling, external audio and optional controller-first startup.
 - Handheld: controller-only first-run setup, touch/on-screen keyboard, small-screen scaling, battery status, supported power/performance controls, suspend/resume and docking/undocking.
 
-Keep user libraries and portable app records compatible across profiles. Device-specific bindings, display configuration and power settings remain local. GPU-specific base images may be needed; a common interface does not imply one image supports every device. Qualify one PC and one specific handheld before expanding the supported-device list. Do not advertise all handhelds as supported.
+Keep user libraries and portable app records compatible across profiles. Device-specific bindings, display configuration and power settings remain local. GPU-specific package selections or installation profiles may be needed; a common interface does not imply one image supports every device. Qualify one PC and one specific handheld before expanding the supported-device list. Do not advertise all handhelds as supported.
 
-1. Reproducible image project with pinned inputs, license inventory and build provenance.
+1. CachyOS ISO project with pinned upstream revisions, recorded package inputs, license inventory and build provenance; validate reproducibility before claiming it.
 2. FishBowl Linux installed with a controller-friendly entry point, desktop fallback and crash recovery.
 3. First-run controller, display, audio, network and storage setup using established system components.
 4. Reviewed emulator installation through trusted supported packages; no automatic game, firmware or key downloads.
 5. User-selected library/save locations with readable missing-drive states and export/restore instructions.
-6. OS update staging, reboot indication and previous-system rollback through the base's supported updater.
+6. Full-system package updates with progress, failure/reboot guidance and tested recovery for the chosen filesystem and boot configuration.
 7. Clear distinction between system rollback and user-data recovery: rolling back the OS does not restore saves or undo profile migrations.
 8. Unified appearance and consistent controller focus, scaling, dialogs and error states.
 
 ## Update ownership
 
-The base image owns kernel, GPU drivers, desktop/compositor and system packages. Image-bundled apps update with that image. Optional user apps use one chosen application packaging/update mechanism. Aquarium must delegate to those owners and never replace an image-owned executable with its Windows ZIP updater. Serialize system transactions and report app updates separately from reboot-required OS updates.
+CachyOS/Arch packages own the kernel, drivers, desktop and system-installed apps. Use full pacman system upgrades; partial upgrades are unsupported. Preserve repository signature verification and keyring handling. Serialize authenticated system transactions, respect pacman's lock and never delete it to bypass a running transaction. A future Aquarium Linux control center must delegate to package management and never overwrite package-owned files with the Windows ZIP updater. Optional separately managed apps retain their own update owner and results.
+
+Plan Btrfs snapshots as the preferred recovery configuration, subject to testing. Coverage depends on subvolumes, excluded paths, bootloader and kernel/initramfs handling. Do not promise automatic or atomic rollback. Provide live-media recovery instructions and separately document recovery for other filesystems. User saves and home data need independent backups.
 
 ## Release acceptance
 
-- VM: image boot, login, desktop fallback, first-run recovery, update and rollback. VM results do not qualify physical gaming performance.
+- VM: ISO boot/install on disposable disks, login, desktop fallback, full-system upgrades, interrupted-update recovery and snapshot restoration where configured. VM results do not qualify physical gaming performance.
 - Real selected hardware: graphics/Vulkan, audio, controller hotplug, Bluetooth, suspend/resume, external screens and storage removal.
 - Handheld acceptance: controller-only setup and recovery, touch keyboard, readable small-screen dialogs, battery reporting, supported power controls, repeated suspend/resume during games and dock/undock display/audio/input transitions. Preserve access to upstream controls until replacements pass these checks.
 - Games: documented homebrew/test fixtures; emulator launch/exit, focus, save restore and controller navigation.
@@ -64,9 +68,11 @@ Do not install, repartition, change boot settings or modify the user's installed
 
 ## Sources
 
-- Bazzite custom image guidance: https://docs.bazzite.gg/Advanced/creating_custom_image/
-- Bazzite hardware/image selection: https://docs.bazzite.gg/General/FAQ/
-- Bazzite Gaming Mode overview: https://docs.bazzite.gg/Handheld_and_HTPC_edition/Steam_Gaming_Mode/
+- CachyOS ISO builder: https://github.com/CachyOS/CachyOS-Live-ISO
+- CachyOS handheld setup: https://wiki.cachyos.org/installation/installation_handheld/
+- CachyOS snapshot recovery: https://wiki.cachyos.org/configuration/btrfs_snapshots/
+- Arch full-system update requirements: https://wiki.archlinux.org/title/System_maintenance#Partial_upgrades_are_unsupported
+
 - Windows UI framework platform: https://learn.microsoft.com/windows/apps/winui
 
 ## Next decision

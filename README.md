@@ -20,11 +20,13 @@ Shoal is a separate project. Existing Aquarium, FishBowl, FishNet and FishTank r
 
 FishBowl already has a Linux application. Aquarium, FishNet, FishTank and the smaller Windows tools require platform review and Linux adaptations before inclusion. Their existing Windows functionality is not automatically available on Linux.
 
-The proposed foundation is a custom Bazzite-derived image. The base variant, architecture and pinned image must be selected before implementing an image build. No games, proprietary firmware, keys or unlicensed content are included.
+The selected foundation is **CachyOS**, with Shoal-specific ISO profiles, packages and integration maintained in this repository. Desktop and handheld configurations share the product design; hardware-neutral planning does not override upstream CPU requirements or certify every device. Pin upstream ISO-builder revisions and record package versions before releasing builds. No games, console BIOS, console firmware, keys or other content without redistribution permission are included.
 
 ## Documentation
 
 - [System design and app integration](docs/DESIGN.md)
 - [Development roadmap](docs/ROADMAP.md)
 
-OS updates must use the base system's update mechanism. Image-owned apps must not be overwritten by a separate ZIP updater. System rollback is distinct from restoring user saves and settings.
+System packages use CachyOS/Arch's pacman update model, with complete system upgrades rather than partial upgrades. Shoal must not overwrite package-owned apps through a separate ZIP updater. Btrfs recovery depends on the selected filesystem, snapshot coverage and boot configuration; it is not an atomic image update or a backup of user saves.
+
+Upstream references: [CachyOS ISO builder](https://github.com/CachyOS/CachyOS-Live-ISO), [Handheld Edition](https://wiki.cachyos.org/installation/installation_handheld/) and [snapshot recovery](https://wiki.cachyos.org/configuration/btrfs_snapshots/).

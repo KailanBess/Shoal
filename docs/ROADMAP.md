@@ -4,7 +4,7 @@ All milestones below are planned; this repository currently contains design docu
 
 ## 1. Build foundation
 
-Select an initial CPU architecture and upstream GPU/device variants without promising universal hardware support. Pin the base image and source inputs; establish dependency license records and a reproducible image build in this repository. Do not modify existing app repositories or install anything on the development PC.
+Use CachyOS as the selected base. Select build architectures and CPU/GPU/device requirements without promising universal compatibility. Pin the upstream CachyOS-Live-ISO revision and maintain Shoal ISO profiles and package definitions here. Record repository/package inputs and license obligations; validate builds on a supported Linux builder before claiming reproducibility. Do not modify existing app repositories or install anything on the development PC.
 
 ## 2. FishBowl-first prototype
 
@@ -20,6 +20,6 @@ Adapt Aquarium control-center functionality and optional FishNet/media tools wit
 
 ## 5. Recovery and preview release
 
-Test boot, fallback, staged updates and rollback in VMs. Test games, input, graphics, storage, suspend and docking on named physical devices. Test interrupted profile writes and save restores. Document limitations and licenses, establish image signing/key ownership and publish clearly labeled preview artifacts only after acceptance checks pass.
+Test ISO boot/install, fallback, full pacman upgrades, interrupted transactions and documented recovery in VMs. Qualify Btrfs snapshot coverage and boot/kernel restoration; do not assume immutable-image or atomic rollback behavior. Test games, input, graphics, storage, suspend and docking on named physical devices. Test interrupted profile writes and save restores. Document limitations and licenses, establish ISO/package signing and key ownership and publish clearly labeled preview artifacts only after acceptance checks pass.
 
 A VM pass is not evidence of handheld compatibility. An OS rollback is not a user-data backup.
