@@ -20,15 +20,17 @@ Use KDE Plasma for the desktop initially. Prototype FishBowl autostart in a norm
 
 ## Existing app integration
 
+All seven Linux editions below are required built-in applications in the complete OS. Implementation is staged; a FishBowl-first prototype is not the completed suite. See [Linux app delivery requirements](LINUX-APPS.md). Built-in applications need not run at startup.
+
 | Component | Intended OS role | Required work |
 | --- | --- | --- |
 | FishBowl Linux | Main game library, emulator routing, save snapshots and living-room browsing | Controller-only setup, compositor/session integration, exit/crash recovery and hardware qualification. Linux currently launches emulators externally; Windows embedded Play is not portable. |
 | Aquarium | Suite control center: apps, updates, appearance and recovery | Native Linux UI and platform services; existing WinUI application cannot be shipped as a native Linux app unchanged. Reuse portable models/validation only after dependency review. |
-| FishNet | Optional media center | Linux UI and playback backend, codecs, output selection and conversion qualification. Existing Windows media APIs require replacement. |
-| FishTank | Optional Linux security/recovery companion | Define Linux-specific protection evidence and authenticated recovery; Windows Defender, DPAPI and Windows policy integrations cannot be reused as Linux protection. Do not transfer Windows-protected secrets automatically. |
-| File Organizer | Optional file utilities | Port UI and filesystem behavior, case sensitivity, links, permissions and safe cross-filesystem moves. |
-| Device Inventory | Optional hardware records | Port UI/storage and implement explicit Linux hardware inspection separately. |
-| Workspace Launcher | Optional desktop workspace tools | Port app discovery; window positioning needs compositor-specific support and may be restricted on Wayland. |
+| FishNet | Built-in media center | Linux UI and playback backend, codecs, output selection and conversion qualification. Existing Windows media APIs require replacement. |
+| FishTank | Built-in Linux security/recovery companion | Define Linux-specific protection evidence and authenticated recovery; Windows Defender, DPAPI and Windows policy integrations cannot be reused as Linux protection. Do not transfer Windows-protected secrets automatically. |
+| File Organizer | Built-in file utilities | Port UI and filesystem behavior, case sensitivity, links, permissions and safe cross-filesystem moves. |
+| Device Inventory | Built-in hardware records | Port UI/storage and implement explicit Linux hardware inspection separately. |
+| Workspace Launcher | Built-in desktop workspace tools | Port app discovery; window positioning needs compositor-specific support and may be restricted on Wayland. |
 
 ## First usable version
 

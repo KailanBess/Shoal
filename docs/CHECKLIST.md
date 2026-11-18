@@ -9,6 +9,7 @@ Planning status: 2026-11-18. Checked items mean the stated decision/documentatio
 - [x] CachyOS selected as the base.
 - [x] PC and handheld product scope; hardware-neutral planning.
 - [x] Existing app repositories must remain unchanged.
+- [x] All seven Linux editions required as built-in apps in the complete OS; see [Linux app requirements](LINUX-APPS.md).
 - [x] Design, integration plan, roadmap and detailed build guide documented.
 
 ## Owner setup / decisions
@@ -32,7 +33,14 @@ Planning status: 2026-11-18. Checked items mean the stated decision/documentatio
 - [ ] Validate first-run controls, keyboard/touch, audio, display and networking.
 - [ ] Implement full-system update ownership and privileged transaction handling.
 - [ ] Test configured snapshots, boot/kernel recovery and separate user backups.
-- [ ] Implement and test optional Linux app adaptations before inclusion.
+- [ ] Create feature-parity ledgers for all seven Linux editions.
+- [ ] Implement/package Aquarium Linux.
+- [ ] Implement/package FishNet Linux.
+- [ ] Implement/package FishTank Linux with Linux-specific security review.
+- [ ] Implement/package File Organizer Linux.
+- [ ] Implement/package Device Inventory Linux.
+- [ ] Implement/package Workspace Launcher Linux.
+- [ ] Verify all seven built-in Linux editions in the installed OS; list absent apps in intermediate previews.
 - [ ] Add read-only PR checks and a manual preview ISO workflow.
 - [ ] Complete a real build run and verify downloaded artifact checksums.
 

@@ -16,7 +16,7 @@ Provide shared styling and separate device profiles. Cover controller-only setup
 
 ## 4. App integrations
 
-Adapt Aquarium control-center functionality and optional FishNet/media tools within Shoal. Scope FishTank's Linux security functions separately from Windows-only protection. Preserve dependency boundaries and user data; do not assume Windows-protected secrets or window-hosting APIs transfer.
+Build and integrate Linux editions of all seven apps as required OS applications: Aquarium, FishBowl, FishNet, FishTank, File Organizer, Device Inventory and Workspace Launcher. Follow [the Linux app requirements](LINUX-APPS.md); maintain per-feature parity ledgers, native packages and installed-system acceptance tests. Scope FishTank's Linux security functions separately from Windows-only protection. Preserve dependency boundaries and user data; do not assume Windows-protected secrets or window-hosting APIs transfer.
 
 ## 5. Recovery and preview release
 

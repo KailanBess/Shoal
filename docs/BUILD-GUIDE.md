@@ -109,9 +109,9 @@ Owner: Codex implements; physical testers supply evidence.
 
 Done when: the feature works in the actual relevant profile. Physical handheld support stays unqualified until tested on named devices.
 
-## 9. Add the other apps in stages
+## 9. Build the remaining required Linux editions in stages
 
-Owner: Codex; all adaptations initially remain in Shoal.
+Owner: Codex; all adaptations initially remain in Shoal. All seven Linux editions are required built-in applications for the complete OS. Follow [the delivery and parity requirements](LINUX-APPS.md). Intermediate prototypes may include a subset, but must list missing editions explicitly.
 
 | App | Work before inclusion |
 | --- | --- |
